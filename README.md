@@ -1,0 +1,1 @@
+# This is my mini project, it allows you to view, add, change and remove products from a list.
