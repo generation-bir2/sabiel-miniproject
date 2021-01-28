@@ -3,6 +3,9 @@ import os
 
 def clear():
     os.system( 'cls' )
+
+#global variables are bad practise
+
 def myfunc():
     global products
     products = ["coke", "fanta", "7up"]
