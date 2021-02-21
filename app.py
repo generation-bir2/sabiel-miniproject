@@ -1,89 +1,40 @@
 import sys
 import os
+from menus import main_menu
+import mysql.connector
 
-def clear():
-    os.system( 'cls' )
-def myfunc():
-    global products
-    products = ["coke", "fanta", "7up"]
-myfunc()
+mydb = mysql.connector.connect(
+host="localhost",
+user="root",
+password="password",
+database="SB_MP"
+)
 
-def menu():
-    print("""
-welcome to the app
+mycursor = mydb.cursor(dictionary = True)
 
-close app           [0]
-show products       [1]
-add product         [2]
-change product      [3]
-remove product      [4]
-""")
+mycursor.execute('''CREATE TABLE IF NOT EXISTS products (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    price FLOAT NOT NULL,
+    PRIMARY KEY(id)
+    );''')
 
-    choice = int(input())
+mycursor.execute('''CREATE TABLE IF NOT EXISTS couriers (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    phone_number VARCHAR(30) NOT NULL,
+    PRIMARY KEY(id)
+    );''')
 
-    if choice == 0:
-        clear()
-        sys.exit(0)
+mycursor.execute('''CREATE TABLE IF NOT EXISTS orders (
+    id INT NOT NULL AUTO_INCREMENT,
+    customer_name VARCHAR(30) NOT NULL,
+    customer_address VARCHAR(100) NOT NULL,
+    customer_phone_number VARCHAR(30) NOT NULL,
+    courier INT NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    items VARCHAR(30) NOT NULL,
+    PRIMARY KEY(id)
+    );''')
 
-    elif choice == 1:
-        clear()
-        print(products)
-        print("press any key for main menu")
-        type = input()
-        if type == "0":
-            clear()
-            menu()
-        else:
-            clear()
-            menu()
-
-    elif choice == 2:
-        clear()
-        print(products)
-        add = input("enter new product: ")
-        products.append(add)
-        print("product has been added")
-        print("press any key for main menu")
-        result = (input())
-        if result == "0":
-            clear()
-            menu()
-        else:
-            clear()
-            menu()
-
-    elif choice == 3:
-        clear()
-        print(products)
-        print("what product would you like to change? (first product = 0)")
-        change = int(input())
-        changeto = input("new name for product: ")
-        products[change] = changeto
-        print("product has been changed")
-        print("press any key for main menu")
-        result = (input())
-        if result == "0":
-            clear()
-            menu()
-        else:
-            clear()
-            menu()
-
-    elif choice == 4:
-        clear()
-        print(products)
-        print("what product would you like to remove? (first product = 0)")
-        removing = int(input())
-        products.pop(removing)
-        print("product has been removed")
-        print("press any key for main menu")
-        result = input()
-        if result == "0":
-            clear()
-            menu()
-        else:
-            clear()
-            menu()
-
-
-menu()
+main_menu(mycursor, mydb)
